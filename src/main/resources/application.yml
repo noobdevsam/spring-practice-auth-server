@@ -1,3 +1,6 @@
 spring:
     application:
         name: spring-practice-auth-server
+    threads:
+        virtual:
+            enabled: true
