@@ -34,7 +34,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Configuration
@@ -114,20 +114,20 @@ public class SecConfig {
                 .clientSecret("{noop}secret")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantTypes(grant -> grant.addAll(
-                        List.of(
+                        Set.of(
                                 AuthorizationGrantType.AUTHORIZATION_CODE,
                                 AuthorizationGrantType.REFRESH_TOKEN,
                                 AuthorizationGrantType.CLIENT_CREDENTIALS
                         )
                 ))
                 .redirectUris(redirect -> redirect.addAll(
-                        List.of(
+                        Set.of(
                                 "http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc",
                                 "http://127.0.0.1:8080/authorized"
                         )
                 ))
                 .scopes(scope -> scope.addAll(
-                        List.of(
+                        Set.of(
                                 OidcScopes.OPENID,
                                 OidcScopes.PROFILE,
                                 "message.read",
@@ -190,24 +190,34 @@ public class SecConfig {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// This configuration class sets up the security filter chains for the application.
+// It defines three filter chains: one for actuator endpoints, one for the authorization server,
+// and one for the default security filter chain.
+// The actuator filter chain allows all requests to actuator endpoints.
+// The authorization server filter chain configures the OAuth2 authorization server,
+// including OIDC support and resource server support.
+// The default security filter chain requires authentication for all requests and enables form login.
+// The class also defines a user details service with a single user, a registered client repository
+// with a client, and a JWK source for JWT decoding.
+// The RSA key pair is generated for signing JWTs.
+// The authorization server settings specify the issuer URL for the authorization server.
+// The class is annotated with @Configuration and @EnableWebSecurity to indicate that it is a configuration class for security.
+// The @Order annotations specify the order in which the filter chains are applied.
+// The actuator filter chain has the highest order (1), followed by the authorization server filter chain (2),
+// and the default security filter chain (3).
+// The user details service (4), JWK source (5), JWT decoder (6), and authorization server settings (7)
+// are also defined as beans with their respective orders.
+// The registered client repository (8) is defined with a single registered client that supports
+// multiple authorization grant types and redirect URIs.
+// The client settings require authorization consent for the registered client.
+// The JWK source is used to provide the public key for JWT verification.
+// The RSA key pair is generated using a KeyPairGenerator.
+// The generateRsaKey() method generates a new RSA key pair with a key size of 2048 bits.
+// The public key is used to create an RSAKey object, which is then used to create a JWKSet.
+// The JWKSet is wrapped in an ImmutableJWKSet to provide a read-only view of the JWK set.
+// The JWK source is then used to create a JwtDecoder bean for decoding JWTs.
+// The authorization server settings specify the issuer URL for the authorization server.
+// The issuer URL is used in the JWT token to identify the authorization server.
+// The authorization server settings are defined as a bean with the @Bean annotation.
+// The authorizationServerSettings() method creates an instance of AuthorizationServerSettings
+// with the specified issuer URL and returns it.
