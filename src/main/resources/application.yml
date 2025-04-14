@@ -8,3 +8,13 @@ spring:
 server:
     port: 9000
 
+management:
+    endpoint:
+        health:
+            probes:
+                enabled: true
+    health:
+        readinessstate:
+            enabled: true
+        livenessstate:
+            enabled: true
