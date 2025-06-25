@@ -21,5 +21,11 @@ management:
 
 jwt.issuer-uri: ${JWT-ISSUER-URI:http://localhost:9000}
 
-#     Docker container creation command
-# docker run -d --name spring-practice-auth-server -p 9000:9000 spring-practice-auth-server:0.0.1-SNAPSHOT
+# Docker container creation command
+#   docker run -d --name spring-practice-auth-server -p 9000:9000 spring-practice-auth-server:0.0.1-SNAPSHOT
+
+# Run Auth Server with host name set to (spring-practice-auth-server)
+#   docker run -d --name spring-practice-auth-server -h spring-practice-auth-server -p 9000:9000 spring-practice-auth-server:0.0.1-SNAPSHOT
+
+# The -h flag sets the hostname of the container to spring-practice-auth-server. This hostname can be useful for networking purposes,
+#    especially when the container interacts with other services or containers in a Docker network.
