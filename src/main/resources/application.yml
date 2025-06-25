@@ -19,5 +19,7 @@ management:
         livenessstate:
             enabled: true
 
+jwt.issuer-uri: ${JWT-ISSUER-URI:http://localhost:9000}
+
 #     Docker container creation command
 # docker run -d --name spring-practice-auth-server -p 9000:9000 spring-practice-auth-server:0.0.1-SNAPSHOT
