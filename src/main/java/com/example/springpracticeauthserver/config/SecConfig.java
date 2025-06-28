@@ -119,14 +119,28 @@ public class SecConfig {
                 // Builds the security filter chain
                 .build();
     }
+
+    /**
+     * Configures the default security filter chain for the application.
+     * <p>
+     * This filter chain ensures that all requests are authenticated and enables form-based login.
+     * It is applied with the order (3), meaning it is used after higher-priority filter chains.
+     *
+     * @param http the {@link HttpSecurity} object used to configure the security filter chain
+     * @return the configured {@link SecurityFilterChain} for the default security settings
+     * @throws Exception if an error occurs while configuring the security filter chain
+     */
     @Bean
     @Order(3)
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
+                // Requires authentication for all requests
                 .authorizeHttpRequests(
                         (authorize) -> authorize.anyRequest().authenticated()
                 )
+                // Enables form-based login
                 .formLogin(Customizer.withDefaults())
+                // Builds the security filter chain
                 .build();
     }
 
