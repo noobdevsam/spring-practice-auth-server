@@ -262,14 +262,26 @@ public class SecConfig {
         return new ImmutableJWKSet<>(jwkSet);
     }
 
+    /**
+     * Generates an RSA key pair for cryptographic operations.
+     * <p>
+     * This method uses the {@link KeyPairGenerator} to create a new RSA key pair with a key size of 2048 bits.
+     * If an error occurs during key pair generation, an {@link IllegalStateException} is thrown.
+     *
+     * @return the generated {@link KeyPair} containing the RSA public and private keys
+     */
     private KeyPair generateRsaKey() {
         KeyPair keyPair;
 
         try {
+            // Creates a KeyPairGenerator instance for RSA algorithm
             var keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            // Initializes the generator with a key size of 2048 bits
             keyPairGenerator.initialize(2048);
+            // Generates the RSA key pair
             keyPair = keyPairGenerator.generateKeyPair();
         } catch (Exception e) {
+            // Throws an IllegalStateException if key pair generation fails
             throw new IllegalStateException(e);
         }
 
