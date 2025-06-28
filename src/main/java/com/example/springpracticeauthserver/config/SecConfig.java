@@ -289,6 +289,15 @@ public class SecConfig {
     }
 
 
+    /**
+     * Configures a JWT decoder for the authorization server.
+     * <p>
+     * This method creates a {@link JwtDecoder} bean using the provided {@link JWKSource}.
+     * The JWK source supplies the public key required for verifying JWTs issued by the authorization server.
+     *
+     * @param jwkSource the {@link JWKSource} used to provide the public key for JWT verification
+     * @return the configured {@link JwtDecoder} for decoding JWTs
+     */
     @Bean
     @Order(7)
     public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
