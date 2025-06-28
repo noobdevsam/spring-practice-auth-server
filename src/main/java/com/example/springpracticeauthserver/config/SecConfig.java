@@ -45,14 +45,28 @@ public class SecConfig {
     @Value("${jwt.issuer-uri}")
     String issuer;
 
+    /**
+     * Configures a security filter chain for actuator endpoints.
+     * <p>
+     * This filter chain matches requests to any actuator endpoint and permits all requests
+     * without requiring authentication. It is applied with the highest order (1) to ensure
+     * that actuator endpoints are accessible regardless of other security configurations.
+     *
+     * @param http the {@link HttpSecurity} object used to configure the security filter chain
+     * @return the configured {@link SecurityFilterChain} for actuator endpoints
+     * @throws Exception if an error occurs while configuring the security filter chain
+     */
     @Bean
     @Order(1)
     public SecurityFilterChain actuatorSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
+                // Matches requests to any actuator endpoint
                 .securityMatcher(EndpointRequest.toAnyEndpoint())
+                // Permits all requests to actuator endpoints
                 .authorizeHttpRequests(
                         (authorize) -> authorize.anyRequest().permitAll()
                 )
+                // Builds the security filter chain
                 .build();
     }
 
