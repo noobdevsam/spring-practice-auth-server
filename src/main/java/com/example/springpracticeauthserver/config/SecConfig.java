@@ -70,24 +70,41 @@ public class SecConfig {
                 .build();
     }
 
+    /**
+     * Configures a security filter chain for the authorization server.
+     * <p>
+     * This filter chain matches requests to the authorization server endpoints and ensures
+     * that all requests are authenticated. It also configures OpenID Connect (OIDC) support,
+     * exception handling for unauthenticated requests, and JWT-based resource server support.
+     *
+     * @param http the {@link HttpSecurity} object used to configure the security filter chain
+     * @return the configured {@link SecurityFilterChain} for the authorization server
+     * @throws Exception if an error occurs while configuring the security filter chain
+     */
     @Bean
     @Order(2)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
 
+        // Configures the authorization server
         var authorizationServerConfigurer = OAuth2AuthorizationServerConfigurer.authorizationServer();
 
         return http
+                // Matches requests to authorization server endpoints
                 .securityMatcher(
                         authorizationServerConfigurer.getEndpointsMatcher()
                 )
+                // Applies the authorization server configuration
                 .with(
                         authorizationServerConfigurer, (authorizationServer) -> {
+                            // Enables OpenID Connect (OIDC) support
                             authorizationServer.oidc(Customizer.withDefaults());
                         }
                 )
+                // Requires authentication for all requests
                 .authorizeHttpRequests(
                         (authorize) -> authorize.anyRequest().authenticated()
                 )
+                // Configures exception handling for unauthenticated requests
                 .exceptionHandling(
                         (exceptions) -> {
                             exceptions.authenticationEntryPoint(
@@ -95,12 +112,13 @@ public class SecConfig {
                             );
                         }
                 )
+                // Configures JWT-based resource server support
                 .oauth2ResourceServer(
                         (oauth2) -> oauth2.jwt(Customizer.withDefaults())
                 )
+                // Builds the security filter chain
                 .build();
     }
-
     @Bean
     @Order(3)
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
