@@ -169,13 +169,35 @@ public class SecConfig {
         return new InMemoryUserDetailsManager(userDetails);
     }
 
+    /**
+     * Configures a repository for managing registered OAuth2 clients.
+     * <p>
+     * This method creates an in-memory repository containing a single registered client
+     * with the following properties:
+     * <ul>
+     *   <li>Client ID: "messaging-client"</li>
+     *   <li>Client Secret: "{noop}secret" (no encoding applied)</li>
+     *   <li>Authentication Method: CLIENT_SECRET_BASIC</li>
+     *   <li>Authorization Grant Types: Authorization Code, Refresh Token, Client Credentials</li>
+     *   <li>Redirect URIs: "http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc" and "http://127.0.0.1:8080/authorized"</li>
+     *   <li>Scopes: OpenID, Profile, message.read, message.write</li>
+     *   <li>Client Settings: Requires authorization consent</li>
+     * </ul>
+     * The registered client is stored in an {@link InMemoryRegisteredClientRepository}, which is returned.
+     *
+     * @return the configured {@link RegisteredClientRepository} containing the registered client
+     */
     @Bean
     @Order(5)
     public RegisteredClientRepository registeredClientRepository() {
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
+                // Sets the client ID for the registered client
                 .clientId("messaging-client")
+                // Sets the client secret without encoding
                 .clientSecret("{noop}secret")
+                // Configures the client authentication method
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                // Configures the supported authorization grant types
                 .authorizationGrantTypes(grant -> grant.addAll(
                         Set.of(
                                 AuthorizationGrantType.AUTHORIZATION_CODE,
@@ -183,12 +205,14 @@ public class SecConfig {
                                 AuthorizationGrantType.CLIENT_CREDENTIALS
                         )
                 ))
+                // Configures the redirect URIs for the client
                 .redirectUris(redirect -> redirect.addAll(
                         Set.of(
                                 "http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc",
                                 "http://127.0.0.1:8080/authorized"
                         )
                 ))
+                // Configures the scopes for the client
                 .scopes(scope -> scope.addAll(
                         Set.of(
                                 OidcScopes.OPENID,
@@ -197,11 +221,13 @@ public class SecConfig {
                                 "message.write"
                         )
                 ))
+                // Configures client settings to require authorization consent
                 .clientSettings(ClientSettings.builder()
                         .requireAuthorizationConsent(true)
                         .build())
                 .build();
 
+        // Returns an in-memory repository containing the registered client
         return new InMemoryRegisteredClientRepository(registeredClient);
     }
 
