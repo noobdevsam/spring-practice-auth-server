@@ -304,11 +304,21 @@ public class SecConfig {
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
     }
 
+    /**
+     * Configures the authorization server settings.
+     * <p>
+     * This method creates an {@link AuthorizationServerSettings} bean with the specified issuer URL.
+     * The issuer URL is used in JWT tokens to identify the authorization server.
+     *
+     * @return the configured {@link AuthorizationServerSettings} with the issuer URL
+     */
     @Bean
     @Order(8)
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder()
+                // Sets the issuer URL for the authorization server
                 .issuer(issuer)
+                // Builds the authorization server settings
                 .build();
     }
 
