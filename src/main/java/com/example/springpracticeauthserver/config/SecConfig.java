@@ -231,20 +231,34 @@ public class SecConfig {
         return new InMemoryRegisteredClientRepository(registeredClient);
     }
 
+    /**
+     * Configures a JWK (JSON Web Key) source for JWT decoding.
+     * <p>
+     * This method generates an RSA key pair and creates a JWK set containing the RSA key.
+     * The JWK set is wrapped in an {@link ImmutableJWKSet}, which provides a read-only view
+     * of the JWK set. The JWK source is used for providing the public key required for
+     * verifying JWTs.
+     *
+     * @return the configured {@link JWKSource} for JWT decoding
+     */
     @Bean
     @Order(6)
     public JWKSource<SecurityContext> jwkSource() {
+        // Generates an RSA key pair
         var keyPair = generateRsaKey();
         var publicKey = (RSAPublicKey) keyPair.getPublic();
         var privateKey = (RSAPrivateKey) keyPair.getPrivate();
 
+        // Creates an RSA key with the public and private keys
         var rsaKey = new RSAKey.Builder(publicKey)
                 .privateKey(privateKey)
                 .keyID(UUID.randomUUID().toString())
                 .build();
 
+        // Creates a JWK set containing the RSA key
         var jwkSet = new JWKSet(rsaKey);
 
+        // Returns an immutable JWK source containing the JWK set
         return new ImmutableJWKSet<>(jwkSet);
     }
 
