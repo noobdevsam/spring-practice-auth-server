@@ -144,15 +144,28 @@ public class SecConfig {
                 .build();
     }
 
+    /**
+     * Configures a user details service with an in-memory user.
+     * <p>
+     * This method creates a single user with the username "user", a password encoded using
+     * {@link BCryptPasswordEncoder}, and the role "USER". The user is stored in an
+     * {@link InMemoryUserDetailsManager}, which is returned as the user details service.
+     *
+     * @return the configured {@link UserDetailsService} with an in-memory user
+     */
     @Bean
     @Order(4)
     public UserDetailsService userDetailsService() {
         var userDetails = User.builder()
+                // Sets the username for the user
                 .username("user")
+                // Encodes the password using BCryptPasswordEncoder
                 .password(new BCryptPasswordEncoder().encode("password"))
+                // Assigns the role "USER" to the user
                 .roles("USER")
                 .build();
 
+        // Returns an in-memory user details manager containing the user
         return new InMemoryUserDetailsManager(userDetails);
     }
 
